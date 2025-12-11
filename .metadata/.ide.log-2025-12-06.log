@@ -1,0 +1,44 @@
+2025-12-07 12:47:34,626 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:47:57,225 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:48:04,248 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:48:25,822 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:48:26,025 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:48:28,848 [INFO] Gpio:277 - dependency for GPIO [SPI1]
+2025-12-07 12:51:20,172 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 791305168 Bytes (1073741824)
+2025-12-07 12:51:22,881 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 844736856 Bytes (1073741824)
+2025-12-07 12:51:26,651 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 362905640 Bytes (1073741824)
+2025-12-07 12:51:27,660 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-07 12:51:27,661 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-07 12:51:27,662 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-07 12:51:27,662 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-07 12:51:27,663 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-07 12:51:27,665 [INFO] CodeGenerator:882 - code generatio: config db path: D:\Application\CubeIDE\STM32CubeIDE_1.18.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.14.1.202504091515\\db\
+2025-12-07 12:51:28,006 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\license.tmp_save
+2025-12-07 12:51:28,594 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2025-12-07 12:51:28,711 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\license.tmp
+2025-12-07 12:51:29,172 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\gpio.tmp_save
+2025-12-07 12:51:29,520 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\gpio.tmp
+2025-12-07 12:51:29,856 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\stm32g4xx_it.c_save
+2025-12-07 12:51:30,133 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\stm32g4xx_it.c
+2025-12-07 12:51:30,151 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\stm32g4xx_it.h_save
+2025-12-07 12:51:30,317 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\stm32g4xx_it.h
+2025-12-07 12:51:30,378 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\stm32g4xx_hal_msp.c_save
+2025-12-07 12:51:30,668 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\stm32g4xx_hal_msp.c
+2025-12-07 12:51:30,677 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\system.tmp_save
+2025-12-07 12:51:30,795 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\MXTmpFiles\system.tmp
+2025-12-07 12:51:30,832 [INFO] CodeEngine:319 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\stm32g4xx_hal_conf.h_save
+2025-12-07 12:51:30,995 [INFO] CodeEngine:343 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\stm32g4xx_hal_conf.h
+2025-12-07 12:51:31,055 [WARN] IPConfigManager:3217 - Warning: the RefConfig RCC_CommonPeriphClockConfig is not available in your config.xml file
+2025-12-07 12:51:31,069 [INFO] ApiDbMcu:508 - Load IP Config File for SPI1
+2025-12-07 12:51:31,077 [INFO] ApiDbMcu:508 - Load IP Config File for RCC
+2025-12-07 12:51:31,110 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\main.h_save
+2025-12-07 12:51:31,284 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Inc\main.h
+2025-12-07 12:51:31,319 [INFO] CodeEngine:263 - oldGeneratedFile, D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\main.c_save
+2025-12-07 12:51:31,619 [INFO] CodeEngine:287 - Generated code: D:\Git_repositories\stm32_icm20600_spi_hal\icm20600_hal\Core\Src\main.c
+2025-12-07 12:51:32,360 [INFO] ProjectBuilder:3324 - Time for Copy HAL[1] : 370mS.
+2025-12-07 12:51:32,375 [INFO] ProjectBuilder:4912 - Project Generator version: 4.6.0.1-B1
+2025-12-07 12:51:32,569 [INFO] ConfigFileManager:1590 - The Die is : DIE469
+2025-12-07 12:51:32,581 [INFO] ApiDbMcu:508 - Load IP Config File for FATFS
+2025-12-07 12:51:32,591 [INFO] ApiDbMcu:508 - Load IP Config File for FREERTOS
+2025-12-07 12:51:32,605 [INFO] ApiDbMcu:508 - Load IP Config File for USBPD
+2025-12-07 12:51:32,620 [INFO] ApiDbMcu:508 - Load IP Config File for USB_DEVICE

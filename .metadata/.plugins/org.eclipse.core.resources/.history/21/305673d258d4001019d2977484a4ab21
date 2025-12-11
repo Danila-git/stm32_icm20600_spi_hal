@@ -1,0 +1,149 @@
+#include "stm32g474xx.h"
+#include "stdint.h"
+
+#define ACCEL_SCALE 0b11 //00 = 2g, 01 = 4g, 10 = 8g, 11 = 16g
+#define GYRO_SCALE 0b11  //00 = 250dps, 01 = 500dps, 10 = 1000dps, 11 = 2000dps
+#define MAX_ARRAY_SIZE 50
+
+void dummy_delay(uint32_t duration);
+void set_spi_config(void);
+void rewrite_icm20600_register(uint8_t address, uint8_t data); // function to rewrite register
+void set_mask_icm20600_register(uint8_t address, uint8_t data);     // function to add data to the register
+void read_uninterrupt_icm20600_register(uint8_t address, uint32_t num_of_addresses,uint8_t storage[]);
+void rewrite_uninterrupt_icm20600_register(uint8_t address, uint32_t num_of_addresses, uint8_t storage[]);
+uint8_t send_and_recieve_byte(uint8_t send_data);
+uint8_t read_icm20600_register(uint8_t address);
+float accel_x_data, accel_y_data, accel_z_data, gyro_x_data, gyro_y_data, gyro_z_data;
+float accel_sensitivity[4] = {16384.0f, 8192.0f, 4096.0f, 2048.0f};
+float gyro_sensitivity[4] = {131.0f, 65.5f, 32.8f, 16.4f};
+uint8_t who_am_i;
+uint8_t storage[MAX_ARRAY_SIZE];
+uint8_t *storage_pointer = &storage[0];
+
+int main(void) {
+\    SCB->CPACR |= 0x3 << 20;
+
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // enable SPI clock
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN; // enable port A clock
+
+    // configure pins 5-7 as alternate function, pin 4 as output
+    GPIOA->MODER &= ~(GPIO_MODER_MODE4_Msk | GPIO_MODER_MODE5_Msk | GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk);
+    GPIOA->MODER |= (1 << GPIO_MODER_MODE4_Pos) | (2 << GPIO_MODER_MODE5_Pos) | (2 << GPIO_MODER_MODE6_Pos) | (2 << GPIO_MODER_MODE7_Pos);
+
+    // set alternate function SPI for SCLK, MOSI, MISO
+    GPIOA->AFR[0] &= ~(GPIO_AFRL_AFSEL5_Msk | GPIO_AFRL_AFSEL6_Msk | GPIO_AFRL_AFSEL7_Msk);
+    GPIOA->AFR[0] |= (5 << GPIO_AFRL_AFSEL5_Pos) | (5 << GPIO_AFRL_AFSEL6_Pos) | (5 << GPIO_AFRL_AFSEL7_Pos);
+
+    // configure CS pin
+    GPIOA->BSRR = GPIO_BSRR_BS4; // Set high - inactive
+
+    set_spi_config(); // SPI configuration function
+    SPI1->CR1 |= SPI_CR1_SPE; // enable SPI
+    who_am_i = read_icm20600_register(0x75); // Check communication with ICM
+    rewrite_icm20600_register(0x6B, 0x00);
+    set_mask_icm20600_register(0x1B, GYRO_SCALE << 3); // Set gyroscope sensitivity
+    set_mask_icm20600_register(0x1C, ACCEL_SCALE << 3); // Set accelerometer sensitivity
+
+    while (1) {
+        read_uninterrupt_icm20600_register(0x3B, 14, storage_pointer); // Function for continuous reading of 14 registers
+
+        // Calculate acceleration values and angular rates from raw data
+        accel_x_data = (float)(int16_t)((storage[0] << 8) | storage[1]) / accel_sensitivity[ACCEL_SCALE];
+        dummy_delay(20000);
+        accel_y_data = (float)(int16_t)((storage[2] << 8) | storage[3]) / accel_sensitivity[ACCEL_SCALE];
+        dummy_delay(20000);
+        accel_z_data = (float)(int16_t)((storage[4] << 8) | storage[5]) / accel_sensitivity[ACCEL_SCALE];
+        dummy_delay(20000);
+        gyro_x_data = (float)(int16_t)((storage[8] << 8) | storage[9]) / gyro_sensitivity[GYRO_SCALE];
+        dummy_delay(20000);
+        gyro_y_data = (float)(int16_t)((storage[10] << 8) | storage[11]) / gyro_sensitivity[GYRO_SCALE];
+        dummy_delay(20000);
+        gyro_z_data = (float)(int16_t)((storage[12] << 8) | storage[13]) / gyro_sensitivity[GYRO_SCALE];
+    }
+}
+
+void set_spi_config(void) {
+    SPI1->CR1 |= 0b1 << SPI_CR1_SSM_Pos | 0b1 << SPI_CR1_SSI_Pos | 0b1 << SPI_CR1_BR_Pos | 0b1 << SPI_CR1_MSTR_Pos;
+    SPI1->CR1 |= 0b1 << SPI_CR1_CPOL_Pos | 0b1 << SPI_CR1_CPHA_Pos;
+    SPI1->CR2 |= 0b0111 << SPI_CR2_DS_Pos | 0b1 << SPI_CR2_FRXTH_Pos;
+}
+
+void rewrite_icm20600_register(uint8_t address, uint8_t data) {
+    GPIOA->BSRR = GPIO_BSRR_BR4;
+
+    send_and_recieve_byte(address);
+    send_and_recieve_byte(data);
+
+    GPIOA->BSRR = GPIO_BSRR_BS4;
+}
+
+void set_mask_icm20600_register(uint8_t address, uint8_t data) {
+	uint8_t data_for_send = read_icm20600_register(address);
+    data_for_send &= ~(data);
+    data_for_send |=  data;
+
+    GPIOA->BSRR = GPIO_BSRR_BR4;
+
+    send_and_recieve_byte(address);
+    send_and_recieve_byte(data_for_send);
+
+    GPIOA->BSRR = GPIO_BSRR_BS4;
+}
+
+uint8_t read_icm20600_register(uint8_t address) {
+    uint8_t r_data = 0;
+    address = address | 0x80;
+
+    GPIOA->BSRR = GPIO_BSRR_BR4;
+
+    send_and_recieve_byte(address);
+    r_data = send_and_recieve_byte(0x55);
+
+    GPIOA->BSRR = GPIO_BSRR_BS4;
+
+    return r_data;
+}
+
+void read_uninterrupt_icm20600_register(uint8_t address, uint32_t num_of_addresses, uint8_t storage[]) {
+    address = address | 0x80;
+
+    GPIOA->BSRR = GPIO_BSRR_BR4;
+
+    send_and_recieve_byte(address);
+
+    for (int i = 0; i < num_of_addresses; i += 1) {
+        storage[i] = send_and_recieve_byte(0x55);
+    }
+
+    GPIOA->BSRR = GPIO_BSRR_BS4;
+}
+
+void write_uninterrupt_icm20600_register(uint8_t address, uint32_t num_of_addresses,uint8_t storage[]) {
+    GPIOA->BSRR = GPIO_BSRR_BR4;
+
+    send_and_recieve_byte(address);
+
+    for (int i = 0; i < num_of_addresses; i += 1) {
+        send_and_recieve_byte(storage[i]);
+    }
+
+    GPIOA->BSRR = GPIO_BSRR_BS4;
+}
+
+uint8_t send_and_recieve_byte(uint8_t send_data) {
+    uint8_t recieve_data;
+
+    while (!(SPI1->SR & SPI_SR_TXE));
+
+    *((volatile uint8_t *) &SPI1->DR) = send_data;
+
+    while (!(SPI1->SR & SPI_SR_RXNE));
+
+    recieve_data = SPI1->DR;
+
+    return recieve_data;
+}
+
+void dummy_delay(uint32_t duration) {
+    for (uint32_t i = 0; i < duration; i += 1);
+}

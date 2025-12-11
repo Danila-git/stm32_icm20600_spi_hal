@@ -1,2 +1,11 @@
 data
 who_am_i
+tx_data
+rx_byte
+storage
+accel_x_data
+accel_y_data
+accel_z_data
+gyro_x_data
+gyro_y_data
+gyro_z_data
